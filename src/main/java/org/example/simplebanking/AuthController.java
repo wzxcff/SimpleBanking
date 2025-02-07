@@ -15,6 +15,12 @@ public class AuthController {
 
     private PasswordEncoder passwordEncode = new BCryptPasswordEncoder();
 
+    private final JwtUtils jwtUtils;
+
+    public AuthController(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;  // Injected instance of JwtUtils
+    }
+
     @Autowired
     private UserRepository userRepository;
 
@@ -30,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
         String password = credentials.get("password");
         if (userRepository.findByUsername(username).isEmpty()) {
@@ -43,8 +49,21 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
         }
 
-        String token = "token-example-here";
+        String token = jwtUtils.generateJwtToken(username);
 
-        return ResponseEntity.ok().body(username + ":" + password + ":" + token);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 }
+
+class JwtResponse {
+    private String token;
+
+    public JwtResponse(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+}
+
