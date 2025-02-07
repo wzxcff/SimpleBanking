@@ -13,6 +13,16 @@ public class Users {
     private String email;
     private String password;
 
+    public float getBalance() {
+        return balance;
+    }
+
+    public void setBalance(float balance) {
+        this.balance = balance;
+    }
+
+    private float balance;
+
     public Users(Long id, String username, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.username = username;
@@ -20,6 +30,7 @@ public class Users {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.balance = 0.0f;
     }
 
     protected Users() {}
