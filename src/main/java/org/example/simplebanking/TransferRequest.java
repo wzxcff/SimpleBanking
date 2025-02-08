@@ -1,23 +1,14 @@
 package org.example.simplebanking;
 
 public class TransferRequest {
-    private long fromAccount;
-    private long toAccount;
+    private String toAccount;
     private float amount;
 
-    public long getFromAccount() {
-        return fromAccount;
-    }
-
-    public void setFromAccount(long fromAccount) {
-        this.fromAccount = fromAccount;
-    }
-
-    public long getToAccount() {
+    public String getToAccount() {
         return toAccount;
     }
 
-    public void setToAccount(long toAccount) {
+    public void setToAccount(String toAccount) {
         this.toAccount = toAccount;
     }
 
