@@ -16,13 +16,13 @@ public class AuthController {
     private PasswordEncoder passwordEncode = new BCryptPasswordEncoder();
 
     private final JwtUtils jwtUtils;
-
-    public AuthController(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;  // Injected instance of JwtUtils
-    }
-
-    @Autowired
     private UserRepository userRepository;
+
+
+    public AuthController(JwtUtils jwtUtils, UserRepository userRepository) {
+        this.jwtUtils = jwtUtils;
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody Users users) {

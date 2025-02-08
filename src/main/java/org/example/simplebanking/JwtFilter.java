@@ -29,6 +29,7 @@ public class JwtFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String token = getTokenFromRequest(httpRequest);
 
+
         if (token != null && jwtUtils.validateJwtToken(token)) {
             String username = jwtUtils.getUsernameFromJwtToken(token);
             System.out.println("Authenticated user: " + username);

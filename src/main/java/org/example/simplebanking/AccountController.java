@@ -2,6 +2,7 @@ package org.example.simplebanking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -10,8 +11,14 @@ import java.util.Map;
 @RequestMapping("/api/account")
 public class AccountController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public AccountController(JdbcTemplate jdbcTemplate, UserRepository userRepository) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/balance/{id}")
     public ResponseEntity<String> getBalance(@PathVariable("id") long id) {
@@ -55,5 +62,13 @@ public class AccountController {
         userRepository.save(fromAccount);
         userRepository.save(toAccount);
         return ResponseEntity.ok().body("Successfully transferred");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") long id) {
+        Users user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+        jdbcTemplate.execute("ALTER TABLE USERS AUTO_INCREMENT = 1");
+        return ResponseEntity.ok().body("Deleted user: " + user.getUsername());
     }
 }
